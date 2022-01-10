@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Number Genarator</title>
+  <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <style>
+    body {
+      background-color: #2c3e50;
+    }
+    .container {
+      padding-top: 100px;
+      text-align: center;
+      color: #ecf0f1;
+      font-size: 600px;
+      cursor: pointer;
+      font-family: "Papyrus";
+      -webkit-user-select: none;
+    }
+  </style>
+  <script>
+    $(function(){
+      var max = 35;
+      var state = "stop";
+      var running_number;
+      var count_down;
+      var hit = [];
+      $(".container").click(function(){
+        if (state == "stop") {
+          if (hit.length == max) {
+            $(".container").html("!!!");
+          } else {
+            state = "running";
+          }
+          $(".container").css("color", "#ecf0f1");
+        } else if (state == "running") {
+          state = "slowdown";
+          clearInterval(running_number);
+        } else {
+          return;
+        }
+        if (state == "running") {
+          running_number = setInterval(function(){
+            $(".container").html(random_number(max)); 
+          }, 40);
+        }
+        if (state == "slowdown") {
+          count_down = 40;
+          slowDown();
+        }
+      });
+      function slowDown() {
+          $(".container").html(random_number(max));
+          count_down *= 1.5;
+          if (count_down > 2000) {
+            $(".container").css("color", "#2ecc71");
+            hit.push(parseInt($(".container").html()));
+            state = "stop";
+          } else {
+            setTimeout(slowDown, count_down);   
+          }
+      }
+      function random_number(max) {
+        var number;
+        do {
+          number = Math.floor(Math.random()*max)+1;
+        } while ($.inArray(number, hit) != -1);
+        if (number < 10) {number = "0" + number};
+        return number;
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    !!!
+  </div>
+</body>
+</html>
